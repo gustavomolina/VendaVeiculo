@@ -17,74 +17,18 @@ public class VendaVeiculo {
     static ArrayList<Carro> carros = new ArrayList<>();
     static ArrayList<Motocicleta> motocicletas = new ArrayList<>();
     static ArrayList<Cliente> clientes = new ArrayList<>();
-    
-    static Scanner e = new Scanner(System.in);
 
     static int opcLogin = 0, opcGer = 0, opcVen = 0, auxLogin, i;
     static int cpfCliente = 0, numchassi = 0, rgVendedor, veriCli = 0, veriVei = 0;
     static int opcCad = 0, indiceVen, j = 0, indiceClient;
 
-    static int RG, diaNasc = 0, mesNasc = 0, anoNasc = 0, diaAdm = 0, mesAdm = 0, anoAdm = 0, tempoRest, cpf, dependentes;
-    static String nome, responsavel, numero, bairro, rua, cidade;
-    static double salario, renda, preco;
-
+    static int RG, diaNasc = 0, mesNasc = 0, anoNasc = 0, diaAdm = 0, mesAdm = 0, anoAdm = 0;
+    static int tempoRest, cpf, dependentes, ano, quilometragem, peso, status, potencia, numcilindros;
+    static int numocupantes, cilindradas;
+    static String nome, responsavel, numero, bairro, rua, cidade, marca, modelo, tipocombustivel;
+    static String moto;
+    static double salario, renda, comp, larg, altu, preco;
     static Data dataNasc;
-
-    public static void realizarVenda() {
-        System.out.println("\n Realizar venda \n");
-        System.out.println("\n Venda: \n");
-        if (clientes.isEmpty() || carros.isEmpty() || motocicletas.isEmpty()) {
-            System.out.println("\n é necessário cadastrar pelo menos um cliente ou"
-                    + " um carro ou uma moto! \n");
-        } else {//pode relizar a venda
-            veriCli = 0;
-            System.out.println("\n Digite o CPF do cliente: \n");
-            cpf = Integer.parseInt(e.nextLine());
-            for (i = 0; i < clientes.size() && veriCli == 0; i++) {
-                if (cpf == clientes.get(i).getCpf()) {
-                    veriCli = i;
-                    System.out.println("\n CPF encontrado! \n");
-                }
-            }
-            if (veriCli == 0) {
-                System.out.println("Cliente não encontrado!");
-            } else {
-                veriVei = 0;
-                System.out.println("\n Digite o Número do chassi do veículo: \n");
-                numchassi = Integer.parseInt(e.nextLine());
-                for (i = 0; i < carros.size() && veriVei == 0; i++) {
-                    if (numchassi == carros.get(i).getChassi()) {
-                        veriVei = i;
-                        System.out.println("\n Número do carro encontrado! \n");
-                        System.out.println("Detalhes do carro: ");
-                        carros.get(veriVei).getTudo();
-                        if (carros.get(veriVei).verificaStatus()) {
-                            System.out.println("Veículo já foi vendido!");
-                        } else {
-                            carros.get(veriVei).setStatus(1);
-                            System.out.println("Realizando venda para " + clientes.get(veriCli).getNome());
-                            preco = carros.get(veriCli).getPreco();
-                            System.out.println("");
-                        }
-                    }
-                }
-                for (i = 0; i < motocicletas.size() && veriVei == 0; i++) {
-                    if (numchassi == motocicletas.get(i).getChassi()) {
-                        veriVei = 1;
-                        System.out.println("\n Número da moto encontrado! \n");
-                    }
-                }
-                if (veriVei == 0) {
-                    System.out.println("Veículo não encontrado!");
-                }
-            }
-        }
-
-    }
-    
-    public static void cadastraVeiculo(){
-        
-    }
 
     public static void lerArqClientes(FileReader arqRead) {
         try {
@@ -127,7 +71,7 @@ public class VendaVeiculo {
         try {
             BufferedReader a = new BufferedReader(arqRead);
             String linha = a.readLine();
-            gerentes.clear();
+            clientes.clear();
             while (linha != null) {
                 nome = linha;
                 linha = a.readLine();
@@ -156,6 +100,120 @@ public class VendaVeiculo {
             System.exit(1);
         }
     }
+    
+    public static void lerArqSeniors(FileReader arqRead){
+        try {
+            BufferedReader a = new BufferedReader(arqRead);
+            String linha = a.readLine();
+            vendSeniors.clear();
+            while (linha != null) {
+                nome = linha;
+                linha = a.readLine();
+                RG = Integer.parseInt(linha);
+                linha = a.readLine();
+                diaNasc = Integer.parseInt(linha);
+                linha = a.readLine();
+                mesNasc = Integer.parseInt(linha);
+                linha = a.readLine();
+                anoNasc = Integer.parseInt(linha);
+                linha = a.readLine();
+                diaAdm = Integer.parseInt(linha);
+                linha = a.readLine();
+                mesAdm = Integer.parseInt(linha);
+                linha = a.readLine();
+                anoAdm = Integer.parseInt(linha);
+                linha = a.readLine();
+                salario = Double.parseDouble(linha);
+                linha = a.readLine();
+                VendedorSenior senior = new VendedorSenior(RG, diaNasc, mesNasc, anoNasc, diaAdm,
+                        mesAdm, anoAdm, nome, salario);
+                vendSeniors.add(senior);
+            }
+        } catch (IOException ex) {//mistério
+            System.out.println("\n O programa será fechado, favor consultar a equipe de TI.\n ");
+            System.exit(1);
+        }
+    }
+    
+    public static void lerArqJuniors(FileReader arqRead){
+        try {
+            BufferedReader a = new BufferedReader(arqRead);
+            String linha = a.readLine();
+            vendJuniors.clear();
+            while (linha != null) {
+                nome = linha;
+                linha = a.readLine();
+                RG = Integer.parseInt(linha);
+                linha = a.readLine();
+                diaNasc = Integer.parseInt(linha);
+                linha = a.readLine();
+                mesNasc = Integer.parseInt(linha);
+                linha = a.readLine();
+                anoNasc = Integer.parseInt(linha);
+                linha = a.readLine();
+                diaAdm = Integer.parseInt(linha);
+                linha = a.readLine();
+                mesAdm = Integer.parseInt(linha);
+                linha = a.readLine();
+                anoAdm = Integer.parseInt(linha);
+                linha = a.readLine();
+                salario = Double.parseDouble(linha);
+                linha = a.readLine();
+                tempoRest = Integer.parseInt(linha);
+                linha = a.readLine(); 
+                responsavel = linha;
+                linha = a.readLine();                
+                vendedorJunior junior = new vendedorJunior(RG, diaNasc, mesNasc, anoNasc, diaAdm,
+                        mesAdm, anoAdm, nome, salario, tempoRest, responsavel);
+                vendJuniors.add(junior);
+            }
+        } catch (IOException ex) {//mistério
+            System.out.println("\n O programa será fechado, favor consultar a equipe de TI.\n ");
+            System.exit(1);
+        }
+    }
+
+    public static void lerArqCarros(FileReader arqCar){
+        
+    }
+   
+    public static void lerArqMotocicletas(FileReader arqRead){
+        try {
+            BufferedReader a = new BufferedReader(arqRead);
+            String linha = a.readLine();
+            vendJuniors.clear();
+            while (linha != null) {
+                numchassi = Integer.parseInt(linha);
+                linha = a.readLine();
+                ano = Integer.parseInt(linha);
+                linha = a.readLine();
+                quilometragem = Integer.parseInt(linha);
+                linha = a.readLine();
+                peso = Integer.parseInt(linha);
+                linha = a.readLine();
+                marca = linha;
+                linha = a.readLine();             
+                modelo = linha;
+                linha = a.readLine();                
+                tipocombustivel = linha;
+                linha = a.readLine();                                
+                status = Integer.parseInt(linha);
+                linha = a.readLine();
+                cilindradas = Integer.parseInt(linha);
+                linha = a.readLine();
+                moto = linha;
+                linha = a.readLine();   
+                preco = Double.parseDouble(linha);
+                linha = a.readLine();                
+                Motocicleta motocicleta = new Motocicleta(numchassi, ano, quilometragem, peso, marca,
+                        modelo, tipocombustivel, status, cilindradas, moto, preco);
+                motocicletas.add(motocicleta);
+            }
+        } catch (IOException ex) {//mistério
+            System.out.println("\n O programa será fechado, favor consultar a equipe de TI.\n ");
+            System.exit(1);
+        }
+    }            
 
     public static void arquivos() {
         try {
@@ -170,15 +228,15 @@ public class VendaVeiculo {
             File arqRelaGerente = new File("C:\\Users\\User\\Documents\\Programas Java\\vendaVeiculo\\src\\vendaveiculo\\banco\\relatorioGerente.txt");
 
             //objetos para escrita
-            FileWriter wArqCli = new FileWriter(arqCli, false);
-            FileWriter wArqGer = new FileWriter(arqGer, false);
-            FileWriter wArqSen = new FileWriter(arqSen, false);
-            FileWriter wArqJun = new FileWriter(arqJun, false);
-            FileWriter wArqCar = new FileWriter(arqCar, false);
-            FileWriter wArqMot = new FileWriter(arqMot, false);
-            FileWriter wArqVenda = new FileWriter(arqVenda, false);
-            FileWriter wArqRelaComum = new FileWriter(arqRelaComum, false);
-            FileWriter wArqRelaGerente = new FileWriter(arqRelaGerente, false);
+            FileWriter wArqCli = new FileWriter(arqCli, true);
+            FileWriter wArqGer = new FileWriter(arqGer, true);
+            FileWriter wArqSen = new FileWriter(arqSen, true);
+            FileWriter wArqJun = new FileWriter(arqJun, true);
+            FileWriter wArqCar = new FileWriter(arqCar, true);
+            FileWriter wArqMot = new FileWriter(arqMot, true);
+            FileWriter wArqVenda = new FileWriter(arqVenda, true);
+            FileWriter wArqRelaComum = new FileWriter(arqRelaComum, true);
+            FileWriter wArqRelaGerente = new FileWriter(arqRelaGerente, true);
 
             //objetos para leitura
             FileReader rArqCli = new FileReader(arqCli);
@@ -206,9 +264,14 @@ public class VendaVeiculo {
         }
     }
 
+    //System.out.println(LocalDate.now());
+    //LocalDate localDate = LocalDate.now();
+    //System.out.println(DateTimeFormatter.ofPattern("yyy/MM/dd").format(localDate));
     public static void main(String[] args) {
 
         boolean achou = false;
+
+        Scanner e = new Scanner(System.in);
 
         //Criando e lendo arquivos
         arquivos();
@@ -637,8 +700,45 @@ public class VendaVeiculo {
                             }
                             break;
                         case 10:
-                            //função específica para realizar venda
-                            realizarVenda();
+                            System.out.println("\n Realizar venda \n");
+                            System.out.println("\n Venda: \n");
+                            if (clientes.isEmpty() || carros.isEmpty() || motocicletas.isEmpty()) {
+                                System.out.println("\n é necessário cadastrar pelo menos um cliente ou"
+                                        + " um carro ou uma moto! \n");
+                            } else {//pode relizar a venda
+                                while (veriCli == 0) {
+                                    System.out.println("\n Digite o CPF do cliente: \n");
+                                    cpfCliente = Integer.parseInt(e.nextLine());
+                                    for (i = 0; i < clientes.size(); i++) {
+                                        if (cpfCliente == clientes.get(i).CPF) {
+                                            veriCli = 1;
+                                            System.out.println("\n CPF encontrado! \n");
+                                            break;
+                                        }
+                                    }
+                                }
+                                while (veriVei == 0) {
+                                    System.out.println("\n Digite o Número do chassi do veículo: \n");
+                                    numchassi = Integer.parseInt(e.nextLine());
+                                    for (i = 0; i < carros.size(); i++) {
+                                        if (numchassi == carros.get(i).getChassi()) {
+                                            veriVei = 1;
+                                            System.out.println("\n Número do carro encontrado! \n");
+                                            break;
+                                        }
+                                    }
+                                    for (i = 0; i < motocicletas.size(); i++) {
+                                        if (numchassi == motocicletas.get(i).getChassi()) {
+                                            veriVei = 1;
+                                            System.out.println("\n Número da moto encontrado! \n");
+                                        }
+                                    }
+                                }
+                                veriCli = 0;//isso permite que ele sempre faça a verificação quando for cadastrar uma nova compra   
+                                veriVei = 0;
+
+                            }
+
                             break;
                         case 11:
                             System.out.println("\n relatório completo \n");
@@ -660,7 +760,49 @@ public class VendaVeiculo {
                         System.out.println("\n Entrada Inválida! \n");
                     } else {
                         if (opcVen == 1) {
-                            realizarVenda();
+                            System.out.println("\n Venda: \n");
+                            if (clientes.isEmpty() || carros.isEmpty() || motocicletas.isEmpty()) {
+                                System.out.println("\n é necessário cadastrar pelo menos um cliente ou"
+                                        + " um carro ou uma moto! \n");
+                            } else {//pode relizar a venda
+                                while (veriCli == 0) {
+                                    System.out.println("\n Digite o CPF do cliente: \n");
+                                    cpfCliente = Integer.parseInt(e.nextLine());
+                                    for (i = 0; i < clientes.size(); i++) {
+                                        if (cpfCliente == clientes.get(i).CPF) {
+                                            veriCli = 1;
+                                            System.out.println("\n CPF encontrado! \n");
+                                            break;
+                                        }
+                                    }
+                                }
+                                while (veriVei == 0) {
+                                    System.out.println("\n Digite o Número do chassi do veículo: \n");
+                                    numchassi = Integer.parseInt(e.nextLine());
+                                    for (i = 0; i < carros.size(); i++) {
+                                        if (numchassi == carros.get(i).numchassi) {
+                                            veriVei = 1;
+                                            System.out.println("\n Número do carro encontrado! \n");
+                                            break;
+                                        }
+                                    }
+                                    for (i = 0; i < motocicletas.size(); i++) {
+                                        if (numchassi == motocicletas.get(i).numchassi) {
+                                            veriVei = 1;
+                                            System.out.println("\n Número da moto encontrado! \n");
+                                        }
+                                    }
+                                }
+                                veriCli = 0;//isso permite que ele sempre faça a verificação quando for cadastrar uma nova compra   
+                                veriVei = 0;
+
+                                System.out.println("\n A venda será feita: \n");
+                                System.out.println("\n RG vendedor:" + rgVendedor + "\n");
+                                System.out.println("\n CPF cliente:" + cpfCliente + "\n");
+                                System.out.println("\n Número do chassi:" + numchassi + "\n");
+                                //colocar em outro .txt os dados acima;
+                            }
+
                         }// fim do if venda
                         if (opcVen == 2) {
                             System.out.println("\n Relatório: \n");
